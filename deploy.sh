@@ -45,12 +45,26 @@ if [ -f readme.md ]; then
 	if [ -f readme.txt ]; then
 		echo "Both readme.md and readme.txt found, leaving them alone."
 	else
+		echo "Moving readme.md to readme.txt and modifying Markdown."
 		mv readme.md readme.txt
-		sed -i '' -e 's/^# \(.*\)$/=== \1 ===/' -e 's/ #* ===$/ ===/' -e 's/^## \(.*\)$/== \1 ==/' -e 's/ #* ==$/ ==/' -e 's/^### \(.*\)$/= \1 =/' -e 's/ #* =$/ =/' readme.txt
+		# Use sed to
+		# - eliminate all lines including and after 
+		#   line starting with '## Developer Information'
+		# - delete all lines starting with an image
+		# - eliminate <> around URLs
+		# - transform headlines to WP == syntax
+		sed -i '' \
+		-e '/^## Developer Information/,$d' \
+		-e '/\!\[/d' \
+		-e 's/<\(http.*\)>/\1/' \
+		-e 's/^# \(.*\)$/=== \1 ===/' \
+		-e 's/^## \(.*\)$/== \1 ==/' \
+		-e 's/^###* \(.*\)$/= \1 =/' \
+		readme.txt
 	fi
 fi
 
-# svn addremove
+# svn add remove
 svn stat | awk '/^\?/ {print $2}' | xargs svn add > /dev/null 2>&1
 svn stat | awk '/^\!/ {print $2}' | xargs svn rm --force
 
