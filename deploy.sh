@@ -10,6 +10,7 @@ BRANCH=${2-'trunk'}
 
 SRC_DIR=${BASEDIR}/git
 DEST_DIR=${BASEDIR}/svn/$BRANCH
+TRUNK=${BASEDIR}/svn/trunk
 
 # make sure the destination dir exists
 mkdir -p $DEST_DIR
@@ -64,7 +65,14 @@ if [ -f readme.md ]; then
 	fi
 fi
 
+# copy current version to trunk as well
+echo "Copying to trunk"
+rsync --recursive --exclude=".*" --delete $DEST_DIR/* $TRUNK
+
+cd $BASEDIR/svn
+
 # svn add remove
+echo "Checking svn stat"
 svn stat | awk '/^\?/ {print $2}' | xargs svn add > /dev/null 2>&1
 svn stat | awk '/^\!/ {print $2}' | xargs svn rm --force
 
