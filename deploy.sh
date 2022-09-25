@@ -26,8 +26,8 @@ if git rev-parse --verify $BRANCH; then
 	echo "Checking out the $BRANCH branch"
 	git checkout $BRANCH
 else
-	echo "Checking out the master branch"
-	git checkout master
+	echo "Checking out the main branch"
+	git checkout main
 fi
 
 # copy everything over from git
@@ -49,7 +49,7 @@ if [ -f readme.md ]; then
 		echo "Moving readme.md to readme.txt and modifying Markdown."
 		mv readme.md readme.txt
 		# Use sed to
-		# - eliminate all lines including and after 
+		# - eliminate all lines including and after
 		#   line starting with '## Developer Information'
 		# - delete all lines starting with an image
 		# - eliminate <> around URLs
