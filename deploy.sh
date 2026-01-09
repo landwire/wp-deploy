@@ -69,7 +69,15 @@ fi
 echo "Copying to trunk"
 rsync --recursive --exclude=".*" --delete $DEST_DIR/* $TRUNK
 
+# check .svnignore
+for file in $(cat "$SRC_DIR/.svnignore" 2> /dev/null)
+do
+	rm -rf $TRUNK/$file
+done
+
 cd $BASEDIR/svn
+
+read -r -p "Count slowly to three and then press return to continue."
 
 # svn add remove
 echo "Checking svn stat"
